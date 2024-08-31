@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="jp" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>メモアプリ</title>
+  </head>
+  <body>
+    <h1>メモアプリ</h1>
+    <button type="button" onclick="location.href='http://localhost:4567/memos/new'">追加</button>
+    <ul>
+      <% @memos.each do |id, post| %>
+      <li>
+        <a href="/memos/<%= id %>">
+          <%= ERB::Util.h(post["title"]) %>
+        </a>
+      </li>
+      <% end %>
+    </ul>
+  </body>
+</html>
