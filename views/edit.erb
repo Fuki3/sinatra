@@ -9,8 +9,7 @@
 <form action="/memos/<%= params[:id] %>" method="post">
   <input type="text" id="title" name="title" value="<%= ERB::Util.h(@title) %>" autocomplete="off">
   <br>
-  <textarea id="body" name="body">
-    <%= ERB::Util.h(@body) %>
+  <textarea id="body" name="body"><%= ERB::Util.h(@body) %>
   </textarea>
   <br>
   <input type="hidden" name="_method" value="patch">
