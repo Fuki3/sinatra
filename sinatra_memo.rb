@@ -26,8 +26,12 @@ post '/memos' do
   body = params[:body]
 
   memos = File.open('memos.json') { |file| JSON.parse(file.read) }
-  id = (memos.keys.map(&:to_i).max + 1).to_s
-  memos[id] = { 'title' => title, 'body' => body }
+  if memos == {}
+    id = 1
+  else
+    id = (memos.keys.map(&:to_i).max + 1).to_s
+  end
+    memos[id] = { 'title' => title, 'body' => body }
   File.open('memos.json', 'w') { |file| JSON.dump(memos, file) }
 
   redirect '/memos'
