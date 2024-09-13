@@ -1,0 +1,12 @@
+    <a href='http://localhost:4567/memos/new'>追加</button>
+    <ul>
+      <% @memos.each do |id, post| %>
+      <li>
+        <a href="/memos/<%= id %>">
+          <%= ERB::Util.h(post["title"]) %>
+        </a>
+      </li>
+      <% end %>
+    </ul>
+  </body>
+</html>
