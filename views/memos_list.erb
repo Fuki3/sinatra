@@ -1,9 +1,9 @@
     <a href='http://localhost:4567/memos/new'>追加</button>
     <ul>
-      <% @memos.each do |id, post| %>
+      <% @memos.each do |row| %>
       <li>
-        <a href="/memos/<%= id %>">
-          <%= ERB::Util.h(post["title"]) %>
+        <a href="/memos/<%= row["id"] %>">
+          <%= CGI.escapeHTML(row["title"]) %>
         </a>
       </li>
       <% end %>

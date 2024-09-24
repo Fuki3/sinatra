@@ -2,19 +2,40 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require 'json'
+require 'pg'
 require 'erb'
 
-def load_memos(file_name)
-  File.open(file_name) { |file| JSON.parse(file.read) }
+def conn
+  PG.connect(dbname: 'sinatra_note_app')
 end
 
-def write_memos(file_name, memos)
-  File.open(file_name, 'w') { |file| JSON.dump(memos, file) }
+def load_memo(id)
+  conn.exec('SELECT * FROM contents') do |result|
+    result.each do |row|
+      @memo_contents = [(row['title']).to_s, (row['body']).to_s] if (row['id']).to_s == id
+    end
+    @memo_contents
+  end
+end
+
+def load_memos
+  conn.exec('SELECT * FROM contents')
+end
+
+def create_memo(title, body)
+  conn.exec_params('INSERT INTO contents(title, body) VALUES ($1, $2);', [title, body])
+end
+
+def edit_memo(title, body, id)
+  conn.exec_params('UPDATE contents SET title = $1, body = $2 WHERE id = $3;', [title, body, id])
+end
+
+def delete_memo(id)
+  conn.exec_params('DELETE FROM contents WHERE id = $1;', [id])
 end
 
 get '/memos' do
-  @memos = load_memos('memos.json')
+  @memos = load_memos
   erb :memos_list
 end
 
@@ -23,50 +44,34 @@ get '/memos/new' do
 end
 
 get '/memos/:id' do
-  memos = load_memos('memos.json')
-  @title = memos[params[:id]]['title']
-  @body = memos[params[:id]]['body']
+  memos = load_memo(params[:id])
+  @title = memos[0]
+  @body = memos[1]
   erb :each_memo
 end
 
 post '/memos' do
   title = params[:title]
   body = params[:body]
-
-  memos = load_memos('memos.json')
-  id = if memos == {}
-         1
-       else
-         (memos.keys.map(&:to_i).max + 1).to_s
-       end
-  memos[id] = { 'title' => title, 'body' => body }
-  write_memos('memos.json', memos)
-
+  create_memo(title, body)
   redirect '/memos'
 end
 
 get '/memos/:id/edit' do
-  memos = load_memos('memos.json')
-  @title = memos[params[:id]]['title']
-  @body = memos[params[:id]]['body']
+  memo = load_memo(params[:id])
+  @title = memo[0]
+  @body = memo[1]
   erb :edit
 end
 
 patch '/memos/:id' do
   title = params[:title]
   body = params[:body]
-
-  memos = load_memos('memos.json')
-  memos[params[:id]] = { 'title' => title, 'body' => body }
-  write_memos('memos.json', memos)
-
+  edit_memo(title, body, params[:id])
   redirect "/memos/#{params[:id]}"
 end
 
 delete '/memos/:id' do
-  memos = load_memos('memos.json')
-  memos.delete(params[:id])
-  write_memos('memos.json', memos)
-
+  delete_memo(params[:id])
   redirect '/memos'
 end
