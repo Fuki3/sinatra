@@ -11,10 +11,7 @@ end
 
 def load_memo(id)
   conn.exec('SELECT * FROM contents') do |result|
-    result.each do |row|
-      @memo_contents = [(row['title']).to_s, (row['body']).to_s] if (row['id']).to_s == id
-    end
-    @memo_contents
+    (result.map{|row| row if row['id'] == id}).compact.first
   end
 end
 
@@ -44,9 +41,8 @@ get '/memos/new' do
 end
 
 get '/memos/:id' do
-  memos = load_memo(params[:id])
-  @title = memos[0]
-  @body = memos[1]
+  @title = load_memo(params[:id])['title']
+  @body = load_memo(params[:id])['body']
   erb :each_memo
 end
 
@@ -58,9 +54,8 @@ post '/memos' do
 end
 
 get '/memos/:id/edit' do
-  memo = load_memo(params[:id])
-  @title = memo[0]
-  @body = memo[1]
+  @title = load_memo(params[:id])['title']
+  @body = load_memo(params[:id])['body']
   erb :edit
 end
 
