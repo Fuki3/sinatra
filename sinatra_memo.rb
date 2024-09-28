@@ -11,7 +11,7 @@ end
 
 def load_memo(id)
   conn.exec('SELECT * FROM contents') do |result|
-    (result.map{|row| row if row['id'] == id}).compact.first
+    (result.map { |row| row if row['id'] == id }).compact.first
   end
 end
 
