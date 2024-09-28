@@ -69,6 +69,7 @@ GEM
     parser (3.3.4.2)
       ast (~> 2.4.1)
       racc
+    pg (1.5.8)
     racc (1.8.1)
     rack (3.1.7)
     rack-protection (4.0.0)
@@ -124,6 +125,8 @@ GEM
       rack-protection (= 4.0.0)
       sinatra (= 4.0.0)
       tilt (~> 2.0)
+    sinatra-reloader (1.0)
+      sinatra-contrib
     smart_properties (1.17.0)
     strscan (3.1.0)
     tilt (2.4.0)
@@ -142,10 +145,12 @@ PLATFORMS
 
 DEPENDENCIES
   erb_lint
+  pg
   rackup
   rubocop-fjord
   sinatra
   sinatra-contrib
+  sinatra-reloader
   webrick
 
 BUNDLED WITH
