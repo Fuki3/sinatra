@@ -33,47 +33,47 @@ end
 
 get '/memos' do
   @memos = load_memos
+  conn.close
   erb :memos_list
 end
-conn.close
 
 get '/memos/new' do
+  conn.close
   erb :new
 end
-conn.close
 
 get '/memos/:id' do
   @title = load_memo(params[:id])['title']
   @body = load_memo(params[:id])['body']
+  conn.close
   erb :each_memo
 end
-conn.close
 
 post '/memos' do
   title = params[:title]
   body = params[:body]
   create_memo(title, body)
+  conn.close
   redirect '/memos'
 end
-conn.close
 
 get '/memos/:id/edit' do
   @title = load_memo(params[:id])['title']
   @body = load_memo(params[:id])['body']
+  conn.close
   erb :edit
 end
-conn.close
 
 patch '/memos/:id' do
   title = params[:title]
   body = params[:body]
   edit_memo(title, body, params[:id])
+  conn.close
   redirect "/memos/#{params[:id]}"
 end
-conn.close
 
 delete '/memos/:id' do
   delete_memo(params[:id])
+  conn.close
   redirect '/memos'
 end
-conn.close
