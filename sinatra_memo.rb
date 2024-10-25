@@ -6,7 +6,7 @@ require 'pg'
 require 'erb'
 
 def conn
-  PG.connect(dbname: 'sinatra_note_app')
+  @conn ||= PG.connect(dbname: 'sinatra_note_app')
 end
 
 def load_memo(id)
@@ -38,7 +38,6 @@ get '/memos' do
 end
 
 get '/memos/new' do
-  conn.close
   erb :new
 end
 
