@@ -42,8 +42,9 @@ get '/memos/new' do
 end
 
 get '/memos/:id' do
-  @title = load_memo(params[:id])['title']
-  @body = load_memo(params[:id])['body']
+  memo = load_memo(params[:id])
+  @title = memo['title']
+  @body = memo['body']
   conn.close
   erb :each_memo
 end
@@ -57,8 +58,9 @@ post '/memos' do
 end
 
 get '/memos/:id/edit' do
-  @title = load_memo(params[:id])['title']
-  @body = load_memo(params[:id])['body']
+  memo = load_memo(params[:id])
+  @title = memo['title']
+  @body = memo['body']
   conn.close
   erb :edit
 end
